@@ -1,5 +1,4 @@
-import { Scene, Mesh, Material } from "three";
-import type { Object3D } from "three";
+import { Scene } from "three";
 import Sizes from "./Utils/Sizes";
 import Time from "./Utils/Time";
 import Resources from "./Utils/Resources";
