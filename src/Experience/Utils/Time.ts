@@ -36,6 +36,10 @@ export default class Time extends EventEmitter {
     });
   }
 
+  get elapsedSec() {
+    return this.elapsed * 1e-3;
+  }
+
   destroy() {
     this.active = false;
   }

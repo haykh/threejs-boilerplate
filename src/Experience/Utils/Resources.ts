@@ -1,5 +1,4 @@
-import { TextureLoader, CubeTextureLoader } from "three";
-import { Texture, CubeTexture } from "three";
+import { TextureLoader, CubeTextureLoader, Texture, CubeTexture } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import type { GLTF } from "three/examples/jsm/loaders/GLTFLoader.js";
 import EventEmitter from "./EventEmitter";
@@ -19,6 +18,7 @@ export default class Resources extends EventEmitter {
   public readonly sources: SourceList;
   private loaders: Loaders;
 
+  public isReady: boolean = false;
   public readonly toLoad: number;
   public loaded: number;
   public items: AssetList;
@@ -37,7 +37,11 @@ export default class Resources extends EventEmitter {
     this.toLoad = this.sources.length;
     this.loaded = 0;
     this.items = {};
-    this.startLoading();
+    if (this.toLoad === 0) {
+      this.isReady = true;
+    } else {
+      this.startLoading();
+    }
   }
 
   startLoading() {
@@ -90,6 +94,7 @@ export default class Resources extends EventEmitter {
     this.items[source.name] = file;
     this.loaded++;
     if (this.loaded === this.toLoad) {
+      this.isReady = true;
       this.trigger("ready");
     }
     console.log(`${source.name} loaded`);

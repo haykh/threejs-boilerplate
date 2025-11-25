@@ -1,7 +1,7 @@
 import type { Scene } from "three";
 import type Resources from "../Utils/Resources";
-import Debug from "../Utils/Debug";
-import Time from "../Utils/Time";
+import type Debug from "../Utils/Debug";
+import type Time from "../Utils/Time";
 import Environment from "./Environment";
 
 interface WorldOptions {
@@ -23,9 +23,13 @@ export default class World {
 
     this.environment = null;
 
-    this.resources.on("ready", () => {
+    if (this.resources.isReady) {
       this.environment = new Environment(this.opts());
-    });
+    } else {
+      this.resources.on("ready", () => {
+        this.environment = new Environment(this.opts());
+      });
+    }
   }
 
   update(time: Time) {}
