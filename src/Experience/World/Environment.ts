@@ -32,14 +32,14 @@ export default class Environment {
     // this.directionalLight.position.set(3.5, 2, -1.24);
     // this.scene.add(this.directionalLight);
 
-    if (this.resources.items.environmentMapTexture !== null) {
+    if (this.resources.items.environmentMapTexture !== undefined) {
       this.scene.environment = this.resources.items
         .environmentMapTexture as Texture;
       this.scene.environmentIntensity = 0.5;
     }
 
     if (this.debugFolder !== null) {
-      if (this.scene.environment !== null) {
+      if (this.resources.items.environmentMapTexture !== undefined) {
         this.debugFolder
           .add(this.scene, "environmentIntensity")
           .name("envMapIntensity")
