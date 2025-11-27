@@ -14,7 +14,7 @@ export default class World {
   private scene: Scene;
   private resources: Resources;
   private debug: Debug;
-  public environment: Environment | null;
+  public environment: Environment | null = null;
 
   constructor(opts: WorldOptions) {
     this.scene = opts.scene;
@@ -23,13 +23,9 @@ export default class World {
 
     this.environment = null;
 
-    if (this.resources.isReady) {
+    this.resources.on("ready", () => {
       this.environment = new Environment(this.opts());
-    } else {
-      this.resources.on("ready", () => {
-        this.environment = new Environment(this.opts());
-      });
-    }
+    });
   }
 
   update(time: Time) {}
