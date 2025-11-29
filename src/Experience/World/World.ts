@@ -1,31 +1,29 @@
-import type { Scene } from "three";
-import type Resources from "../Utils/Resources";
 import type Debug from "../Utils/Debug";
 import type Time from "../Utils/Time";
 import Environment from "./Environment";
+import WorldObject, { type WorldObjectOptions } from "./WorldObject";
 
-interface WorldOptions {
-  scene: Scene;
-  resources: Resources;
-  debug: Debug;
-}
+interface WorldOptions extends WorldObjectOptions {}
 
-export default class World {
-  private scene: Scene;
-  private resources: Resources;
+export default class World extends WorldObject {
   private debug: Debug;
   public environment: Environment | null = null;
 
   constructor(opts: WorldOptions) {
-    this.scene = opts.scene;
-    this.resources = opts.resources;
+    super("world", opts);
     this.debug = opts.debug;
 
-    this.environment = null;
+    if (this.resources.isReady) {
+      this.initialize();
+    } else {
+      this.resources.on("ready", () => {
+        this.initialize();
+      });
+    }
+  }
 
-    this.resources.on("ready", () => {
-      this.environment = new Environment(this.opts());
-    });
+  initialize() {
+    this.environment = new Environment(this.opts());
   }
 
   update(time: Time) {}

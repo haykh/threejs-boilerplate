@@ -1,28 +1,14 @@
-import { DirectionalLight } from "three";
-import type { Texture, Scene } from "three";
-import type { GUI } from "three/examples/jsm/libs/lil-gui.module.min";
-import type Debug from "../Utils/Debug";
-import type Resources from "../Utils/Resources";
+import { AmbientLight, DirectionalLight, type Texture } from "three";
+import WorldObject, { type WorldObjectOptions } from "./WorldObject";
 
-interface EnvironmentOptions {
-  scene: Scene;
-  resources: Resources;
-  debug: Debug;
-}
+interface EnvironmentOptions extends WorldObjectOptions {}
 
-export default class Environment {
-  private scene: Scene;
-  private resources: Resources;
-  public debugFolder: GUI | null = null;
+export default class Environment extends WorldObject {
   public directionalLight: DirectionalLight | null = null;
+  public ambientLight: AmbientLight | null = null;
 
   constructor(opts: EnvironmentOptions) {
-    this.scene = opts.scene;
-    this.resources = opts.resources;
-
-    if (opts.debug.active) {
-      this.debugFolder = opts.debug.getUI().addFolder("environment");
-    }
+    super("environment", opts);
 
     // this.directionalLight = new DirectionalLight("#ffffff", 2);
     // this.directionalLight.castShadow = true;
@@ -31,6 +17,9 @@ export default class Environment {
     // this.directionalLight.shadow.normalBias = 0.05;
     // this.directionalLight.position.set(3.5, 2, -1.24);
     // this.scene.add(this.directionalLight);
+
+    // this.ambientLight = new AmbientLight("#ffffff", 1);
+    // this.scene.add(this.ambientLight);
 
     if (this.resources.items.environmentMapTexture !== undefined) {
       this.scene.environment = this.resources.items
@@ -46,9 +35,22 @@ export default class Environment {
           .min(0)
           .max(4)
           .step(0.001);
-        // .onChange(() => {
-        //   this.scene.environment!.needsUpdate = true;
-        // });
+      }
+      if (this.directionalLight !== null) {
+        this.debugFolder
+          .add(this.directionalLight, "intensity")
+          .name("dirLightIntensity")
+          .min(0)
+          .max(10)
+          .step(0.001);
+      }
+      if (this.ambientLight !== null) {
+        this.debugFolder
+          .add(this.ambientLight, "intensity")
+          .name("ambientIntensity")
+          .min(0)
+          .max(10)
+          .step(0.001);
       }
     }
   }
