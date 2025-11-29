@@ -1,21 +1,21 @@
-import * as THREE from "three";
+import { type Scene, WebGLRenderer } from "three";
 import Sizes from "./Utils/Sizes";
 import Camera from "./Camera";
 
 interface RendererOptions {
   sizes: Sizes;
-  scene: THREE.Scene;
+  scene: Scene;
   canvas: HTMLCanvasElement;
   camera: Camera;
 }
 
 export default class Renderer {
   private sizes: Sizes;
-  private scene: THREE.Scene;
+  private scene: Scene;
   private canvas: HTMLCanvasElement;
   private camera: Camera;
 
-  public instance: THREE.WebGLRenderer;
+  public instance: WebGLRenderer;
 
   constructor(opts: RendererOptions) {
     this.sizes = opts.sizes;
@@ -23,7 +23,7 @@ export default class Renderer {
     this.canvas = opts.canvas;
     this.camera = opts.camera;
 
-    this.instance = new THREE.WebGLRenderer({
+    this.instance = new WebGLRenderer({
       canvas: this.canvas,
       antialias: true,
     });

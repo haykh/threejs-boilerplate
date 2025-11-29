@@ -1,13 +1,13 @@
 import {
-  Object3D,
+  type Material,
+  type BufferGeometry,
+  type Texture,
+  type Object3D,
   Mesh,
   Line,
   LineSegments,
   LineLoop,
   Points,
-  Material,
-  BufferGeometry,
-  Texture,
   ShaderMaterial,
   SkinnedMesh,
 } from "three";
@@ -17,7 +17,7 @@ const isTexture = (v: unknown): v is Texture =>
 
 const disposeMaterial = (mat: Material, disposedTextures: Set<Texture>) => {
   for (const value of Object.values(
-    mat as unknown as Record<string, unknown>
+    mat as unknown as Record<string, unknown>,
   )) {
     if (isTexture(value) && !disposedTextures.has(value)) {
       value.dispose();
@@ -41,7 +41,7 @@ const disposeMaterial = (mat: Material, disposedTextures: Set<Texture>) => {
 const disposeMaterialLike = (
   material: Material | Material[] | undefined,
   disposedMaterials: Set<Material>,
-  disposedTextures: Set<Texture>
+  disposedTextures: Set<Texture>,
 ) => {
   if (!material) return;
   if (Array.isArray(material)) {
@@ -80,7 +80,7 @@ export default function DisposeScene(scene: Object3D) {
       disposeMaterialLike(
         obj.material as Material | Material[] | undefined,
         disposedMaterials,
-        disposedTextures
+        disposedTextures,
       );
     }
 

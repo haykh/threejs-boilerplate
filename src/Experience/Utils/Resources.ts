@@ -1,8 +1,8 @@
 import { TextureLoader, CubeTextureLoader, Texture, CubeTexture } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import type { GLTF } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { type GLTF } from "three/examples/jsm/loaders/GLTFLoader.js";
 import EventEmitter from "./EventEmitter";
-import type { Source, SourceList } from "../sources";
+import { type Source, type SourceList } from "../sources";
 
 interface Loaders {
   gltfLoader: GLTFLoader;
@@ -63,7 +63,7 @@ export default class Resources extends EventEmitter {
             this.sourceLoaded(source, file);
           },
           onProgress,
-          onError
+          onError,
         );
       } else if (type === "texture") {
         if (paths.length === 0) {
@@ -75,7 +75,7 @@ export default class Resources extends EventEmitter {
             this.sourceLoaded(source, file);
           },
           onProgress,
-          onError
+          onError,
         );
       } else if (type === "cubeTexture") {
         this.loaders.cubeTextureLoader.load(
@@ -84,7 +84,7 @@ export default class Resources extends EventEmitter {
             this.sourceLoaded(source, file);
           },
           onProgress,
-          onError
+          onError,
         );
       }
     });

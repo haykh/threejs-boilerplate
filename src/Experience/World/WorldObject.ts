@@ -1,4 +1,4 @@
-import { Scene } from "three";
+import { type Scene } from "three";
 import type Resources from "../Utils/Resources";
 import type { GUI } from "three/examples/jsm/libs/lil-gui.module.min";
 import type Debug from "../Utils/Debug";

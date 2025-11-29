@@ -1,5 +1,4 @@
-import type { Scene } from "three";
-import { PerspectiveCamera } from "three";
+import { type Scene, PerspectiveCamera } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import Sizes from "./Utils/Sizes";
 
@@ -27,7 +26,7 @@ export default class Camera {
       35,
       this.sizes.width / this.sizes.height,
       0.1,
-      100
+      100,
     );
     this.instance.position.set(6, 4, 8);
     this.scene.add(this.instance);
