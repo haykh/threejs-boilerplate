@@ -45,9 +45,13 @@ export default class Resources extends EventEmitter {
   }
 
   startLoading() {
-    const onProgress = (_: ProgressEvent) => {};
-    const onError = (err: unknown) => {
-      console.error(`Error loading asset: ${err}`);
+    const onProgress = (name: string) => (progress: ProgressEvent) => {
+      console.log(
+        `Loading asset ${name}: ${Math.round((100 * progress.loaded) / progress.total)}%`,
+      );
+    };
+    const onError = (name: string) => (err: unknown) => {
+      console.error(`Error loading asset ${name}: ${err}`);
     };
     this.sources.forEach((source) => {
       const type = source.type;
@@ -62,8 +66,8 @@ export default class Resources extends EventEmitter {
           (file) => {
             this.sourceLoaded(source, file);
           },
-          onProgress,
-          onError,
+          onProgress(name),
+          onError(name),
         );
       } else if (type === "texture") {
         if (paths.length === 0) {
@@ -74,8 +78,8 @@ export default class Resources extends EventEmitter {
           (file) => {
             this.sourceLoaded(source, file);
           },
-          onProgress,
-          onError,
+          onProgress(name),
+          onError(name),
         );
       } else if (type === "cubeTexture") {
         this.loaders.cubeTextureLoader.load(
@@ -83,8 +87,8 @@ export default class Resources extends EventEmitter {
           (file) => {
             this.sourceLoaded(source, file);
           },
-          onProgress,
-          onError,
+          onProgress(name),
+          onError(name),
         );
       }
     });

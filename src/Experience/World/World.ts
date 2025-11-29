@@ -33,6 +33,8 @@ export default class World extends WorldObject {
       scene: this.scene,
       resources: this.resources,
       debug: this.debug,
+      renderer: this.renderer,
+      sizes: this.sizes,
     };
   }
 

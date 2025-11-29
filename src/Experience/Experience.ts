@@ -52,6 +52,7 @@ export default class Experience {
       canvas: this.canvas,
       scene: this.scene,
       camera: this.camera,
+      renderer: this.renderer,
       resources: this.resources,
       debug: this.debug,
     };
