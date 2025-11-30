@@ -12,14 +12,18 @@ interface CustomShaderMaterialOptions {
 }
 
 export default class CustomShaderMaterial {
+  public readonly name: string;
+
   private sizes: Sizes;
+
   public debugFolder: GUI | null = null;
   public instance: ShaderMaterial;
 
-  constructor(opts: CustomShaderMaterialOptions) {
+  constructor(name: string, opts: CustomShaderMaterialOptions) {
+    this.name = name;
     this.sizes = opts.sizes;
     if (opts.debug.active) {
-      this.debugFolder = opts.debug.getUI().addFolder("Shader material");
+      this.debugFolder = opts.debug.getUI().addFolder(this.name);
     }
 
     this.instance = new ShaderMaterial({
