@@ -31,12 +31,10 @@ export default class World extends WorldObject {
   initialize() {
     this.environment = new Environment(this.opts());
 
-    this.shader_material = new CustomShaderMaterial({
+    this.shader_material = new CustomShaderMaterial("shader material", {
+      vertexShader,
+      fragmentShader,
       ...this.opts(),
-      ...{
-        vertexShader,
-        fragmentShader,
-      },
     });
     const sphere = new Mesh(
       new SphereGeometry(1, 32, 32),
