@@ -35,8 +35,8 @@ export default class CustomShaderMaterial {
   addUniform(
     name: string,
     value: any,
-    label: string | undefined = undefined,
     addUI: boolean = true,
+    label: string | undefined = undefined,
     options: Array<number> = [],
   ) {
     this.instance.uniforms[name] = new Uniform(value);
@@ -49,8 +49,8 @@ export default class CustomShaderMaterial {
   addColorUniform(
     name: string,
     value: string,
-    label: string | undefined = undefined,
     addUI: boolean = true,
+    label: string | undefined = undefined,
   ) {
     const colorParam = { value: value };
     this.instance.uniforms[name] = new Uniform(new Color(value));
