@@ -21,52 +21,39 @@ export default class Environment extends WorldObject {
     // this.ambientLight = new AmbientLight("#ffffff", 1);
     // this.scene.add(this.ambientLight);
 
-    if (this.resources.items.environmentMapTexture !== undefined) {
-      this.scene.environment = this.resources.items
-        .environmentMapTexture as Texture;
-      this.scene.environmentIntensity = 0.5;
-    }
+    this.scene.environment = this.resources.items
+      ?.environmentMapTexture as Texture;
+    this.scene.environmentIntensity = 0.5;
 
-    if (this.debugFolder !== null) {
-      if (this.resources.items.environmentMapTexture !== undefined) {
-        this.debugFolder
-          .add(this.scene, "environmentIntensity")
-          .name("envMapIntensity")
-          .min(0)
-          .max(4)
-          .step(0.001);
-      }
-      if (this.directionalLight !== null) {
-        this.debugFolder
-          .add(this.directionalLight, "intensity")
-          .name("dirLightIntensity")
-          .min(0)
-          .max(10)
-          .step(0.001);
-      }
-      if (this.ambientLight !== null) {
-        this.debugFolder
-          .add(this.ambientLight, "intensity")
-          .name("ambientIntensity")
-          .min(0)
-          .max(10)
-          .step(0.001);
-      }
+    if (this.resources.items.environmentMapTexture !== undefined) {
+      this.debugFolder
+        ?.add(this.scene, "environmentIntensity")
+        .name("envMapIntensity")
+        .min(0)
+        .max(4)
+        .step(0.001);
+    }
+    if (this.directionalLight !== null) {
+      this.debugFolder
+        ?.add(this.directionalLight, "intensity")
+        .name("dirLightIntensity")
+        .min(0)
+        .max(10)
+        .step(0.001);
+    }
+    if (this.ambientLight !== null) {
+      this.debugFolder
+        ?.add(this.ambientLight, "intensity")
+        .name("ambientIntensity")
+        .min(0)
+        .max(10)
+        .step(0.001);
     }
   }
 
   destroy() {
-    if (this.debugFolder !== null) {
-      this.debugFolder.destroy();
-    }
-    if (this.scene.environment !== null) {
-      (this.scene.environment as Texture).dispose();
-    }
-    if (
-      this.directionalLight !== null &&
-      this.directionalLight.shadow.map !== null
-    ) {
-      this.directionalLight.shadow.map.dispose();
-    }
+    super.destroy();
+    (this.scene?.environment as Texture)?.dispose();
+    this.directionalLight?.shadow.map?.dispose();
   }
 }

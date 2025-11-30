@@ -34,4 +34,8 @@ export default class WorldObject {
       this.debugFolder = opts.debug.getUI().addFolder(this.label);
     }
   }
+
+  destroy() {
+    this.debugFolder?.destroy();
+  }
 }

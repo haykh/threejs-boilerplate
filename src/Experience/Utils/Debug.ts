@@ -18,8 +18,6 @@ export default class Debug {
   }
 
   destroy() {
-    if (this.ui !== null) {
-      this.ui.destroy();
-    }
+    this.ui?.destroy();
   }
 }
