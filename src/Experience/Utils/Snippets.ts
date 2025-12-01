@@ -17,3 +17,7 @@ export const ShaderHookAfter = (
 ): string => {
   return shader.replace(statement, statement + "\n" + snippet);
 };
+
+export const Capitalize = (text: string): string => {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+};
