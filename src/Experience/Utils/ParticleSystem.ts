@@ -8,6 +8,7 @@ import {
 } from "three";
 import { type Variable } from "three/examples/jsm/misc/GPUComputationRenderer";
 import type GPGPU from "./GPGPU";
+import { type GUI } from "three/examples/jsm/libs/lil-gui.module.min";
 import CustomShaderMaterial from "./CustomShaderMaterial";
 import type Debug from "./Debug";
 import type Sizes from "./Sizes";
@@ -36,6 +37,7 @@ export default class ParticleSystem {
   public geometry: BufferGeometry;
   public shaderMaterial: CustomShaderMaterial;
   public points: Points;
+  public debugFolder: GUI | null = null;
 
   constructor(label: string, opts: ParticleSystemOptions) {
     this.label = label;
@@ -56,6 +58,7 @@ export default class ParticleSystem {
       "size",
       [0, 1, 0.01],
     );
+    this.debugFolder = this.shaderMaterial.debugFolder;
 
     this.addAttribute("uv", 2, (x, y) => [
       (x + 0.5) / this.gpgpu.textureSize,
@@ -113,8 +116,26 @@ export default class ParticleSystem {
     );
   }
 
-  addComputeShaderUniform(variable: string, name: string, value: any) {
+  addComputeShaderUniform(
+    variable: string,
+    name: string,
+    value: any,
+    addUI: boolean = false,
+    label: string | null = null,
+    options: Array<number> = [],
+    listen: boolean = false,
+  ) {
     this.variables[variable].material.uniforms[name] = new Uniform(value);
+    if (addUI) {
+      this.debugFolder
+        ?.add(
+          this.variables[variable].material.uniforms[name],
+          "value",
+          ...options,
+        )
+        .name(label || name)
+        .listen(listen);
+    }
   }
 
   setComputeShaderUniform(variable: string, name: string, value: any) {
