@@ -74,7 +74,7 @@ export default class ParticleSystem {
       shader,
       initTexture,
     );
-    this.variables[variable].material.uniforms.uTime = new Uniform(0);
+    this.addComputeShaderUniform(variable, "uTime", 0);
     this.shaderMaterial.addUniform(
       `u${Capitalize(this.label)}${Capitalize(variable)}Texture`,
       null,
@@ -113,10 +113,18 @@ export default class ParticleSystem {
     );
   }
 
+  addComputeShaderUniform(variable: string, name: string, value: any) {
+    this.variables[variable].material.uniforms[name] = new Uniform(value);
+  }
+
+  setComputeShaderUniform(variable: string, name: string, value: any) {
+    this.variables[variable].material.uniforms[name].value = value;
+  }
+
   update(time: Time) {
     this.shaderMaterial.update(time);
-    Object.entries(this.variables).forEach(([_, variable]) => {
-      variable.material.uniforms.uTime.value = time.elapsedSec;
+    Object.entries(this.variables).forEach(([varname, _]) => {
+      this.setComputeShaderUniform(varname, "uTime", time.elapsedSec);
     });
   }
 
