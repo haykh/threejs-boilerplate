@@ -1,6 +1,6 @@
 import { type Scene } from "three";
 import type Resources from "../Utils/Resources";
-import type { GUI } from "three/examples/jsm/libs/lil-gui.module.min";
+import { type GUI } from "three/examples/jsm/libs/lil-gui.module.min";
 import type Debug from "../Utils/Debug";
 import type Renderer from "../Renderer";
 import type Sizes from "../Utils/Sizes";

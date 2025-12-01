@@ -1,27 +1,38 @@
-import { type Scene, WebGLRenderer } from "three";
-import Sizes from "./Utils/Sizes";
-import Camera from "./Camera";
+import { type Scene, WebGLRenderer, Color } from "three";
+import { type GUI } from "three/examples/jsm/libs/lil-gui.module.min";
+import type Sizes from "./Utils/Sizes";
+import type Camera from "./Camera";
+import type Debug from "./Utils/Debug";
 
 interface RendererOptions {
+  canvas: HTMLCanvasElement;
   sizes: Sizes;
   scene: Scene;
-  canvas: HTMLCanvasElement;
   camera: Camera;
+  debug: Debug;
 }
 
 export default class Renderer {
+  private canvas: HTMLCanvasElement;
   private sizes: Sizes;
   private scene: Scene;
-  private canvas: HTMLCanvasElement;
   private camera: Camera;
 
   public instance: WebGLRenderer;
+  public debugFolder: GUI | null = null;
 
   constructor(opts: RendererOptions) {
+    this.canvas = opts.canvas;
     this.sizes = opts.sizes;
     this.scene = opts.scene;
-    this.canvas = opts.canvas;
     this.camera = opts.camera;
+    if (opts.debug.active) {
+      this.debugFolder = opts.debug.getUI().addFolder("renderer");
+    }
+
+    const params = {
+      clearColor: "#29191f",
+    };
 
     this.instance = new WebGLRenderer({
       canvas: this.canvas,
@@ -31,7 +42,12 @@ export default class Renderer {
     // this.instance.toneMappingExposure = 1.75;
     // this.instance.shadowMap.enabled = true;
     // this.instance.shadowMap.type = THREE.PCFSoftShadowMap;
-    // this.instance.setClearColor("#211d20");
+    this.instance.setClearColor(params.clearColor);
+
+    this.debugFolder?.addColor(params, "clearColor").onChange(() => {
+      this.instance.setClearColor(new Color(params.clearColor));
+    });
+
     this.resize();
   }
 

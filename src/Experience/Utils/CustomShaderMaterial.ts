@@ -1,5 +1,5 @@
 import { ShaderMaterial, Uniform, Color } from "three";
-import type { GUI } from "three/examples/jsm/libs/lil-gui.module.min";
+import { type GUI } from "three/examples/jsm/libs/lil-gui.module.min";
 import type Debug from "./Debug";
 import type Time from "./Time";
 import type Sizes from "./Sizes";
