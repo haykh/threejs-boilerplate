@@ -2,6 +2,7 @@ import {
   BufferGeometry,
   BufferAttribute,
   Points,
+  Uniform,
   type Scene,
   type DataTexture,
 } from "three";
@@ -50,13 +51,13 @@ export default class ParticleSystem {
     });
     this.shaderMaterial.addUniform(
       `u${Capitalize(this.label)}Size`,
-      0.03,
+      0.07,
       true,
       "size",
       [0, 1, 0.01],
     );
 
-    this.addAttribute("uv", 2, (x, y, _) => [
+    this.addAttribute("uv", 2, (x, y) => [
       (x + 0.5) / this.gpgpu.textureSize,
       (y + 0.5) / this.gpgpu.textureSize,
     ]);
@@ -73,6 +74,7 @@ export default class ParticleSystem {
       shader,
       initTexture,
     );
+    this.variables[variable].material.uniforms.uTime = new Uniform(0);
     this.shaderMaterial.addUniform(
       `u${Capitalize(this.label)}${Capitalize(variable)}Texture`,
       null,
@@ -113,6 +115,9 @@ export default class ParticleSystem {
 
   update(time: Time) {
     this.shaderMaterial.update(time);
+    Object.entries(this.variables).forEach(([_, variable]) => {
+      variable.material.uniforms.uTime.value = time.elapsedSec;
+    });
   }
 
   syncFBO() {
