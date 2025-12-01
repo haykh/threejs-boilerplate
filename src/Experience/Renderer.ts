@@ -31,7 +31,7 @@ export default class Renderer {
     }
 
     const params = {
-      clearColor: "#29191f",
+      clearColor: "#1a1a1a",
     };
 
     this.instance = new WebGLRenderer({
