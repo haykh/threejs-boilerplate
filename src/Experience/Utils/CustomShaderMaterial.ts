@@ -42,12 +42,14 @@ export default class CustomShaderMaterial {
     addUI: boolean = true,
     label: string | undefined = undefined,
     options: Array<number> = [],
+    listen: boolean = false,
   ) {
     this.instance.uniforms[name] = new Uniform(value);
     if (!addUI) return;
     this.debugFolder
       ?.add(this.instance.uniforms[name], "value", ...options)
-      .name(label || name);
+      .name(label || name)
+      .listen(listen);
   }
 
   addColorUniform(
