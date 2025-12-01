@@ -1,10 +1,12 @@
 import { TextureLoader, CubeTextureLoader, Texture, CubeTexture } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { type GLTF } from "three/examples/jsm/loaders/GLTFLoader.js";
 import EventEmitter from "./EventEmitter";
 import { type Source, type SourceList } from "../sources";
 
 interface Loaders {
+  dracoLoader: DRACOLoader;
   gltfLoader: GLTFLoader;
   textureLoader: TextureLoader;
   cubeTextureLoader: CubeTextureLoader;
@@ -29,10 +31,14 @@ export default class Resources extends EventEmitter {
     this.sources = sources;
 
     this.loaders = {
+      dracoLoader: new DRACOLoader(),
       gltfLoader: new GLTFLoader(),
       textureLoader: new TextureLoader(),
       cubeTextureLoader: new CubeTextureLoader(),
     };
+
+    this.loaders.dracoLoader.setDecoderPath("/draco/");
+    this.loaders.gltfLoader.setDRACOLoader(this.loaders.dracoLoader);
 
     this.toLoad = this.sources.length;
     this.loaded = 0;

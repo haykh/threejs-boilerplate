@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "vite",
+    "copy-draco": "mkdir -p ./static && cp -r node_modules/three/examples/jsm/libs/draco ./static/",
+    "dev": "npm run copy-draco && vite",
     "build": "vite build",
     "deploy": "vercel --prod"
   },
