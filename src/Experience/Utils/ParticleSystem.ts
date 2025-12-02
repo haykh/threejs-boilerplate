@@ -1,56 +1,23 @@
-import {
-  BufferGeometry,
-  BufferAttribute,
-  Points,
-  Uniform,
-  type Scene,
-  type DataTexture,
-} from "three";
-import { type Variable } from "three/examples/jsm/misc/GPUComputationRenderer";
-import type GPGPU from "./GPGPU";
-import { type GUI } from "three/examples/jsm/libs/lil-gui.module.min";
-import CustomShaderMaterial from "./CustomShaderMaterial";
-import type Debug from "./Debug";
-import type Sizes from "./Sizes";
-import type Time from "./Time";
+import { BufferGeometry, BufferAttribute, Points } from "three";
 import { Capitalize } from "./Snippets";
+import GPGPUSystem from "./GPGPUSystem";
+import { GPGPUSystemOptions } from "./GPGPUSystem";
 
-interface ParticleSystemOptions {
-  debug: Debug;
-  sizes: Sizes;
-  scene: Scene;
-
+interface ParticleSystemOptions extends GPGPUSystemOptions {
   count: number;
-  gpgpu: GPGPU;
-  particleVertexShader: string;
-  particleFragmentShader: string;
 }
 
-export default class ParticleSystem {
-  public readonly label: string;
+export default class ParticleSystem extends GPGPUSystem {
   public readonly count: number;
-
-  private gpgpu: GPGPU;
-
-  public variables: { [Key: string]: Variable } = {};
-
   public geometry: BufferGeometry;
-  public shaderMaterial: CustomShaderMaterial;
   public points: Points;
-  public debugFolder: GUI | null = null;
 
   constructor(label: string, opts: ParticleSystemOptions) {
-    this.label = label;
+    super(label, opts);
     this.count = opts.count;
-    this.gpgpu = opts.gpgpu;
 
     this.geometry = new BufferGeometry();
 
-    this.shaderMaterial = new CustomShaderMaterial(this.label, {
-      vertexShader: opts.particleVertexShader,
-      fragmentShader: opts.particleFragmentShader,
-      ...opts,
-    });
     this.shaderMaterial.addUniform(
       `u${Capitalize(this.label)}Size`,
       0.07,
@@ -68,21 +35,7 @@ export default class ParticleSystem {
 
     this.points = new Points(this.geometry, this.shaderMaterial.instance);
 
-    opts.scene.add(this.points);
-  }
-
-  addVariable(variable: string, initTexture: DataTexture, shader: string) {
-    this.variables[variable] = this.gpgpu.instance.addVariable(
-      `u${Capitalize(this.label)}${Capitalize(variable)}`,
-      shader,
-      initTexture,
-    );
-    this.addComputeShaderUniform(variable, "uTime", 0);
-    this.shaderMaterial.addUniform(
-      `u${Capitalize(this.label)}${Capitalize(variable)}Texture`,
-      null,
-      false,
-    );
+    this.scene.add(this.points);
   }
 
   addAttribute(
@@ -90,6 +43,8 @@ export default class ParticleSystem {
     size: number,
     attributeBuilder: (x: number, y: number, i: number) => Array<number>,
   ) {
+    const attrName = `a${Capitalize(this.label)}${Capitalize(attribute)}`;
+    console.log(`Adding attribute ${attrName} to ParticleSystem ${this.label}`);
     const bufferArray = new Float32Array(this.count * size);
     for (let y = 0; y < this.gpgpu.textureSize; y++) {
       for (let x = 0; x < this.gpgpu.textureSize; x++) {
@@ -109,56 +64,8 @@ export default class ParticleSystem {
     );
   }
 
-  setVariableDependencies(varname: string, dependencies: Array<string>) {
-    this.gpgpu.instance.setVariableDependencies(
-      this.variables[varname],
-      dependencies.map((depname: string) => this.variables[depname]),
-    );
-  }
-
-  addComputeShaderUniform(
-    variable: string,
-    name: string,
-    value: any,
-    addUI: boolean = false,
-    label: string | null = null,
-    options: Array<number> = [],
-    listen: boolean = false,
-  ) {
-    this.variables[variable].material.uniforms[name] = new Uniform(value);
-    if (addUI) {
-      this.debugFolder
-        ?.add(
-          this.variables[variable].material.uniforms[name],
-          "value",
-          ...options,
-        )
-        .name(label || name)
-        .listen(listen);
-    }
-  }
-
-  setComputeShaderUniform(variable: string, name: string, value: any) {
-    this.variables[variable].material.uniforms[name].value = value;
-  }
-
-  update(time: Time) {
-    this.shaderMaterial.update(time);
-    Object.entries(this.variables).forEach(([varname, _]) => {
-      this.setComputeShaderUniform(varname, "uTime", time.elapsedSec);
-    });
-  }
-
-  syncFBO() {
-    Object.entries(this.variables).forEach(([varlabel, variable]) => {
-      this.shaderMaterial.instance.uniforms[
-        `u${Capitalize(this.label)}${Capitalize(varlabel)}Texture`
-      ].value = this.gpgpu.instance.getCurrentRenderTarget(variable).texture;
-    });
-  }
-
   destroy() {
+    super.destroy();
     this.geometry.dispose();
-    this.shaderMaterial.destroy();
   }
 }

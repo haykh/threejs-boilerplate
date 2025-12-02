@@ -12,18 +12,18 @@ interface CustomShaderMaterialOptions {
 }
 
 export default class CustomShaderMaterial {
-  public readonly name: string;
+  public readonly label: string;
 
   private sizes: Sizes;
 
   public debugFolder: GUI | null = null;
   public instance: ShaderMaterial;
 
-  constructor(name: string, opts: CustomShaderMaterialOptions) {
-    this.name = name;
+  constructor(label: string, opts: CustomShaderMaterialOptions) {
+    this.label = label;
     this.sizes = opts.sizes;
     if (opts.debug.active) {
-      this.debugFolder = opts.debug.getUI().addFolder(this.name);
+      this.debugFolder = opts.debug.getUI().addFolder(this.label);
     }
 
     this.instance = new ShaderMaterial({
@@ -44,6 +44,7 @@ export default class CustomShaderMaterial {
     options: Array<number> = [],
     listen: boolean = false,
   ) {
+    console.log(`Adding uniform ${name} to CustomShaderMaterial ${this.label}`);
     this.instance.uniforms[name] = new Uniform(value);
     if (!addUI) return;
     this.debugFolder
