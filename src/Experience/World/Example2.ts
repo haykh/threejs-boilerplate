@@ -96,7 +96,7 @@ class Simulation extends GridSimulation {
     this.init({ Heat: initTexture });
   }
 
-  update(camera: Camera) {
+  update(camera: Camera, time: { elapsedSec: number }) {
     this.mouseTracker.update(camera);
 
     const intersections = this.mouseTracker.raycaster.intersectObject(
@@ -116,7 +116,7 @@ class Simulation extends GridSimulation {
       this.gpgpu.compute("heat_transfer");
       this.gpgpu.compute("boundary_conditions");
     }
-    this.gridRenderer2D.render();
+    this.gridRenderer2D.render(time);
   }
 
   destroy() {
@@ -146,7 +146,7 @@ export default class Example2 extends World {
 
   update() {
     super.update();
-    this.simulation.update(this.camera);
+    this.simulation.update(this.camera, this.time);
   }
 
   destroy() {

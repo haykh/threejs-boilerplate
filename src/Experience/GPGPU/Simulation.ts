@@ -1,7 +1,8 @@
-import { type WebGLRenderer, type Scene, type Texture, Uniform } from "three";
+import type { WebGLRenderer, Scene, Texture } from "three";
+import { Uniform } from "three";
 import { type GUI } from "three/addons/libs/lil-gui.module.min.js";
 import GPGPU from "./GPGPU";
-import { GPGPUGridRenderer2D } from "./GPGPURenderer";
+import { GPGPUGridRenderer2D, GPGPUParticleRenderer } from "./GPGPURenderer";
 
 export interface SimulationOptions {
   time: {
@@ -82,7 +83,6 @@ export class GridSimulation extends Simulation {
       displayVertexShader: shaders.displayVertexShader,
       displayFragmentShader: shaders.displayFragmentShader,
       pixelResolution: opts.sizes.pixelResolution,
-      gridSize: this.gpgpuTextureSize,
       uniforms: {
         uColormapVmin: new Uniform(this.colormap.vmin),
         uColormapVmax: new Uniform(this.colormap.vmax),
@@ -123,6 +123,39 @@ export class GridSimulation extends Simulation {
 
   destroy() {
     this.gridRenderer2D.destroy();
+    super.destroy();
+  }
+}
+
+export class ParticleSimulation extends Simulation {
+  public readonly particleRenderer: GPGPUParticleRenderer;
+  public nparticles: number;
+
+  constructor(
+    nparticles: number,
+    shaders: {
+      displayVertexShader: string;
+      displayFragmentShader: string;
+    },
+    opts: SimulationOptions,
+  ) {
+    const textureSize = Math.ceil(Math.sqrt(nparticles));
+    super({ x: textureSize, y: textureSize }, opts);
+    this.nparticles = nparticles;
+
+    this.particleRenderer = new GPGPUParticleRenderer("particles", {
+      debug: opts.debug,
+      scene: opts.scene,
+      gpgpu: this.gpgpu,
+      displayVertexShader: shaders.displayVertexShader,
+      displayFragmentShader: shaders.displayFragmentShader,
+      pixelResolution: opts.sizes.pixelResolution,
+      nparticles: this.nparticles,
+    });
+  }
+
+  destroy() {
+    this.particleRenderer.destroy();
     super.destroy();
   }
 }
