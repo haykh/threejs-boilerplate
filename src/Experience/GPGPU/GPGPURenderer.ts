@@ -1,9 +1,10 @@
+import type { Scene } from "three";
 import {
   Uniform,
   Mesh,
   PlaneGeometry,
   ShaderMaterial,
-  type Scene,
+  DoubleSide,
 } from "three";
 import { type GUI } from "three/addons/libs/lil-gui.module.min.js";
 import type GPUComputationRenderer from "./GPGPU";
@@ -47,6 +48,7 @@ export default class GPGPURenderer {
         uResolution: new Uniform(opts.pixelResolution),
         ...opts.uniforms,
       },
+      side: DoubleSide,
     });
   }
 

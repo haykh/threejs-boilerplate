@@ -131,7 +131,7 @@ export default class Example2 extends World {
   constructor(opts: WorldOptions) {
     super(opts);
     this.simulation = new Simulation(
-      { x: 128, y: 128 },
+      { x: 1024, y: 1024 },
       {
         time: this.time,
         sizes: this.sizes,
