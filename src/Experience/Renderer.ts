@@ -1,20 +1,18 @@
-import { type Scene, WebGLRenderer, Color } from "three";
-import { type GUI } from "three/examples/jsm/libs/lil-gui.module.min";
-import type Sizes from "./Utils/Sizes";
-import type Camera from "./Camera";
-import type Debug from "./Utils/Debug";
+import type { Scene, Camera } from "three";
+import { WebGLRenderer, Color } from "three";
+import type { GUI } from "three/addons/libs/lil-gui.module.min.js";
 
 interface RendererOptions {
   canvas: HTMLCanvasElement;
-  sizes: Sizes;
+  sizes: { width: number; height: number; pixelRatio: number };
   scene: Scene;
-  camera: Camera;
-  debug: Debug;
+  camera: { instance: Camera };
+  debug: { active: boolean; getUI: () => GUI };
 }
 
 export default class Renderer {
   private canvas: HTMLCanvasElement;
-  private sizes: Sizes;
+  private sizes: { width: number; height: number; pixelRatio: number };
   private scene: Scene;
   private camera: Camera;
 
@@ -25,7 +23,7 @@ export default class Renderer {
     this.canvas = opts.canvas;
     this.sizes = opts.sizes;
     this.scene = opts.scene;
-    this.camera = opts.camera;
+    this.camera = opts.camera.instance;
     if (opts.debug.active) {
       this.debugFolder = opts.debug.getUI().addFolder("renderer");
     }
@@ -57,7 +55,7 @@ export default class Renderer {
   }
 
   update() {
-    this.instance.render(this.scene, this.camera.instance);
+    this.instance.render(this.scene, this.camera);
   }
 
   destroy() {

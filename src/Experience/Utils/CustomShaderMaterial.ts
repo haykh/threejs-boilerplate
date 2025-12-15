@@ -1,20 +1,25 @@
 import { ShaderMaterial, Uniform, Color } from "three";
-import { type GUI } from "three/examples/jsm/libs/lil-gui.module.min";
-import type Debug from "./Debug";
-import type Time from "./Time";
-import type Sizes from "./Sizes";
+import { type GUI } from "three/addons/libs/lil-gui.module.min.js";
 
 interface CustomShaderMaterialOptions {
   vertexShader: string;
   fragmentShader: string;
-  debug: Debug;
-  sizes: Sizes;
+  debug: { active: boolean; getUI: () => GUI };
+  sizes: {
+    width: number;
+    height: number;
+    pixelResolution: { x: number; y: number };
+  };
 }
 
 export default class CustomShaderMaterial {
   public readonly label: string;
 
-  private sizes: Sizes;
+  private sizes: {
+    width: number;
+    height: number;
+    pixelResolution: { x: number; y: number };
+  };
 
   public debugFolder: GUI | null = null;
   public instance: ShaderMaterial;
@@ -42,7 +47,7 @@ export default class CustomShaderMaterial {
     addUI: boolean = true,
     label: string | undefined = undefined,
     options: Array<number> = [],
-    listen: boolean = false,
+    listen: boolean = false
   ) {
     console.log(`Adding uniform ${name} to CustomShaderMaterial ${this.label}`);
     this.instance.uniforms[name] = new Uniform(value);
@@ -57,7 +62,7 @@ export default class CustomShaderMaterial {
     name: string,
     value: string,
     addUI: boolean = true,
-    label: string | undefined = undefined,
+    label: string | undefined = undefined
   ) {
     const colorParam = { value: value };
     this.instance.uniforms[name] = new Uniform(new Color(value));
@@ -70,7 +75,7 @@ export default class CustomShaderMaterial {
       });
   }
 
-  update(time: Time) {
+  update(time: { elapsedSec: number }) {
     this.instance.uniforms.uTime.value = time.elapsedSec;
   }
 

@@ -10,7 +10,7 @@ import {
   Vector4,
   WebGLRenderer,
 } from "three";
-import { GUI } from "three/examples/jsm/libs/lil-gui.module.min";
+import { GUI } from "three/addons/libs/lil-gui.module.min.js";
 
 export default class Debug {
   public readonly active: boolean;
@@ -47,7 +47,7 @@ export class DebugCanvas {
     displaySize: { width: number; height: number } = {
       width: 380,
       height: 380,
-    },
+    }
   ) {
     this.instance = document.createElement("canvas");
     this.instance.width = textureSize.width;
@@ -135,13 +135,13 @@ export class DebugQuad {
       prevViewport.x,
       prevViewport.y,
       prevViewport.z,
-      prevViewport.w,
+      prevViewport.w
     );
     this.renderer.setScissor(
       prevScissor.x,
       prevScissor.y,
       prevScissor.z,
-      prevScissor.w,
+      prevScissor.w
     );
     this.renderer.setScissorTest(prevScissorTest);
     this.renderer.autoClear = prevAutoClear;

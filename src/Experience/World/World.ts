@@ -1,23 +1,51 @@
-import { Mesh, SphereGeometry } from "three";
-import type Debug from "../Utils/Debug";
-import type Time from "../Utils/Time";
-import Environment from "./Environment";
-import WorldObject, { type WorldObjectOptions } from "./WorldObject";
-import CustomShaderMaterial from "../Utils/CustomShaderMaterial";
+import type { Scene, WebGLRenderer, Camera } from "three";
+import { type GUI } from "three/addons/libs/lil-gui.module.min.js";
 
-import vertexShader from "../shaders/shader.vert";
-import fragmentShader from "../shaders/shader.frag";
+import type Resources from "../Utils/Resources";
 
-interface WorldOptions extends WorldObjectOptions {}
+export interface WorldOptions {
+  time: { elapsedSec: number };
+  scene: Scene;
+  renderer: { instance: WebGLRenderer };
+  camera: { instance: Camera };
+  sizes: {
+    width: number;
+    height: number;
+    pixelRatio: number;
+    pixelResolution: { x: number; y: number };
+  };
+  resources: Resources;
+  debug: { active: boolean; getUI: () => GUI };
+}
 
-export default class World extends WorldObject {
-  private debug: Debug;
-  public environment: Environment | null = null;
-  public shader_material: CustomShaderMaterial | null = null;
+export class World {
+  protected time: { elapsedSec: number };
+  protected sizes: {
+    width: number;
+    height: number;
+    pixelRatio: number;
+    pixelResolution: { x: number; y: number };
+  };
+  protected scene: Scene;
+  protected renderer: WebGLRenderer;
+  protected camera: Camera;
+  protected resources: Resources;
+  protected debug: { active: boolean; getUI: () => GUI };
+
+  public debugFolder: GUI | null = null;
 
   constructor(opts: WorldOptions) {
-    super("world", opts);
+    this.time = opts.time;
+    this.sizes = opts.sizes;
+    this.scene = opts.scene;
+    this.renderer = opts.renderer.instance;
+    this.camera = opts.camera.instance;
+    this.resources = opts.resources;
     this.debug = opts.debug;
+
+    if (this.debug.active) {
+      this.debugFolder = this.debug.getUI().addFolder("world");
+    }
 
     if (this.resources.isReady) {
       this.initialize();
@@ -28,38 +56,23 @@ export default class World extends WorldObject {
     }
   }
 
-  initialize() {
-    this.environment = new Environment(this.opts());
+  initialize() {}
 
-    this.shader_material = new CustomShaderMaterial("shader material", {
-      vertexShader,
-      fragmentShader,
-      ...this.opts(),
-    });
-    const sphere = new Mesh(
-      new SphereGeometry(1, 32, 32),
-      this.shader_material.instance,
-    );
-    this.scene.add(sphere);
-  }
-
-  update(time: Time) {
-    this.shader_material?.update(time);
-  }
+  update() {}
 
   opts() {
     return {
+      time: this.time,
+      sizes: this.sizes,
       scene: this.scene,
+      renderer: this.renderer,
+      camera: this.camera,
       resources: this.resources,
       debug: this.debug,
-      renderer: this.renderer,
-      sizes: this.sizes,
     };
   }
 
   destroy() {
-    super.destroy();
-    this.environment?.destroy();
-    this.shader_material?.destroy();
+    this.debugFolder?.destroy();
   }
 }

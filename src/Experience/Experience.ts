@@ -1,16 +1,21 @@
 import { Scene } from "three";
+import Stats from "three/addons/libs/stats.module.js";
+
 import Sizes from "./Utils/Sizes";
 import Time from "./Utils/Time";
 import Resources from "./Utils/Resources";
 import Debug from "./Utils/Debug";
 import Camera from "./Camera";
 import Renderer from "./Renderer";
-import World from "./World/World";
 import DisposeScene from "./Utils/Dispose";
+
+import World from "./World/Example2";
 
 import sources from "./sources";
 
 export default class Experience {
+  private stats = new Stats();
+
   public canvas: HTMLCanvasElement;
   public debug: Debug;
   public sizes: Sizes;
@@ -25,6 +30,7 @@ export default class Experience {
     if (canvas === null) {
       throw new Error("Experience received a null for canvas");
     }
+    document.body.appendChild(this.stats.dom);
     this.canvas = canvas;
 
     window.experience = this;
@@ -48,6 +54,7 @@ export default class Experience {
 
   opts() {
     return {
+      time: this.time,
       sizes: this.sizes,
       canvas: this.canvas,
       scene: this.scene,
@@ -66,7 +73,8 @@ export default class Experience {
   update() {
     this.camera.update();
     this.renderer.update();
-    this.world.update(this.time);
+    this.world.update();
+    this.stats.update();
   }
 
   destroy() {
