@@ -90,7 +90,7 @@ class Simulation extends GridSimulation {
         this.gpgpu.updateComputeUniforms("uSourceStrength", v);
       });
     this.debugFolder
-      ?.add(this as any, "timestepsPerFrame" as any, 1, 10, 1)
+      ?.add(this, "timestepsPerFrame" as any, 1, 50, 1)
       .name("steps per frame");
 
     this.init({ Heat: initTexture });
