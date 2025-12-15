@@ -15,7 +15,7 @@ export default class Sizes extends EventEmitter {
     this.pixelRatio = Math.min(2, window.devicePixelRatio);
     this.pixelResolution = new Vector2(
       this.width * this.pixelRatio,
-      this.height * this.pixelRatio
+      this.height * this.pixelRatio,
     );
 
     window.addEventListener("resize", () => {
@@ -29,7 +29,7 @@ export default class Sizes extends EventEmitter {
     this.pixelRatio = Math.min(2, window.devicePixelRatio);
     this.pixelResolution.set(
       this.width * this.pixelRatio,
-      this.height * this.pixelRatio
+      this.height * this.pixelRatio,
     );
 
     this.trigger("resize");

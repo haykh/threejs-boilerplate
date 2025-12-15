@@ -22,7 +22,7 @@ export default class MouseTracker {
     document.addEventListener("pointermove", (event) => {
       this.screenCursor.set(
         (event.clientX / this.sizes.width) * 2 - 1,
-        -(event.clientY / this.sizes.height) * 2 + 1
+        -(event.clientY / this.sizes.height) * 2 + 1,
       );
     });
     document.addEventListener("pointerdown", () => {

@@ -24,7 +24,7 @@ export default class Example1 extends World {
     });
     const sphere = new Mesh(
       new SphereGeometry(1, 32, 32),
-      this.shader_material.instance
+      this.shader_material.instance,
     );
     this.scene.add(sphere);
   }

@@ -14,7 +14,7 @@ export const EnableCastReceiveShadows = (model: Mesh) => {
 export const ShaderHookAfter = (
   shader: string,
   statement: string,
-  snippet: string
+  snippet: string,
 ): string => {
   return shader.replace(statement, statement + "\n" + snippet);
 };

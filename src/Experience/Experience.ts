@@ -78,15 +78,15 @@ export default class Experience {
   }
 
   destroy() {
-    this.debug.destroy();
-    this.sizes.destroy();
-    this.time.destroy();
+    this.world.destroy();
 
     this.resources.destroy();
     this.camera.destroy();
     this.renderer.destroy();
 
-    this.world.destroy();
+    this.debug.destroy();
+    this.sizes.destroy();
+    this.time.destroy();
 
     this.sizes.off("resize");
     this.time.off("tick");

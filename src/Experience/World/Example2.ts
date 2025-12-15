@@ -20,7 +20,7 @@ class Simulation extends GridSimulation {
 
   constructor(
     gpgpuTextureSize: { x: number; y: number },
-    opts: SimulationOptions & { sizes: { width: number; height: number } }
+    opts: SimulationOptions & { sizes: { width: number; height: number } },
   ) {
     super(
       gpgpuTextureSize,
@@ -28,7 +28,7 @@ class Simulation extends GridSimulation {
         displayVertexShader: heatDisplayVertexShader,
         displayFragmentShader: heatDisplayFragmentShader,
       },
-      opts
+      opts,
     );
     this.mouseTracker = new MouseTracker({ sizes: opts.sizes });
 
@@ -51,16 +51,16 @@ class Simulation extends GridSimulation {
         uPointerUv: new Uniform(this.mouseTracker.canvasCursor),
         uPrevPointerUv: new Uniform(this.mouseTracker.prevCanvasCursor),
         uPointerClicked: new Uniform(
-          this.mouseTracker.clicked && this.mouseTracker.shiftDown
+          this.mouseTracker.clicked && this.mouseTracker.shiftDown,
         ),
         uSourceStrength: new Uniform(parameters.sourceStrength),
-      }
+      },
     );
     this.gpgpu.addComputeShader(
       "boundary_conditions",
       heatBoundaryComputeShader,
       "Heat",
-      ["Heat"]
+      ["Heat"],
     );
 
     const initTexture = this.gpgpu.createTexture();
@@ -100,7 +100,7 @@ class Simulation extends GridSimulation {
     this.mouseTracker.update(camera);
 
     const intersections = this.mouseTracker.raycaster.intersectObject(
-      this.gridRenderer2D.mesh
+      this.gridRenderer2D.mesh,
     );
     if (intersections.length > 0) {
       const uv = intersections[0].uv!;
@@ -138,7 +138,7 @@ export default class Example2 extends World {
         renderer: this.renderer,
         scene: this.scene,
         debug: this.debug,
-      }
+      },
     );
   }
 

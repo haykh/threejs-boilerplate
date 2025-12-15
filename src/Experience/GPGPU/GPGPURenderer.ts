@@ -61,7 +61,7 @@ export default class GPGPURenderer {
       const gpgpuVariable = this.gpgpu.variables[varlabel];
       if (gpgpuVariable === undefined) {
         throw new Error(
-          `GPGPU variable u${varlabel} not found when rendering textures`
+          `GPGPU variable u${varlabel} not found when rendering textures`,
         );
       }
       this.displayShaderMaterial.uniforms[`u${varlabel}`].value =
@@ -90,7 +90,7 @@ export class GPGPUGridRenderer2D extends GPGPURenderer {
 
     this.mesh = new Mesh(
       new PlaneGeometry((2 * this.gridSize.x) / this.gridSize.y, 2, 1, 1),
-      this.displayShaderMaterial
+      this.displayShaderMaterial,
     );
     this.scene.add(this.mesh);
   }

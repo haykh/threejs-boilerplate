@@ -1,9 +1,4 @@
-import {
-  type WebGLRenderer,
-  type Scene,
-  type Texture,
-  Uniform,
-} from "three";
+import { type WebGLRenderer, type Scene, type Texture, Uniform } from "three";
 import { type GUI } from "three/addons/libs/lil-gui.module.min.js";
 import GPGPU from "./GPGPU";
 import { GPGPUGridRenderer2D } from "./GPGPURenderer";
@@ -29,7 +24,7 @@ class Simulation {
 
   constructor(
     gpgpuTextureSize: { x: number; y: number },
-    opts: SimulationOptions
+    opts: SimulationOptions,
   ) {
     this.gpgpuTextureSize = gpgpuTextureSize;
     this.gpgpu = new GPGPU(this.gpgpuTextureSize, opts.renderer);
@@ -75,7 +70,7 @@ export class GridSimulation extends Simulation {
       vmax: 1.0,
       map: "turbo",
       reverse: false,
-    }
+    },
   ) {
     super(gpgpuTextureSize, opts);
     this.colormap = colormap;

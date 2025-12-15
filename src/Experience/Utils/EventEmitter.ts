@@ -137,7 +137,7 @@ export default class EventEmitter {
               if (typeof finalResult === "undefined") {
                 finalResult = result;
               }
-            }
+            },
           );
         }
       }
@@ -155,7 +155,7 @@ export default class EventEmitter {
           result = callback.apply(this, args);
 
           if (typeof finalResult === "undefined") finalResult = result;
-        }
+        },
       );
     }
 

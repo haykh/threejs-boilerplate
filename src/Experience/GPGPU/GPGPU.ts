@@ -66,7 +66,7 @@ export default class GPUComputationRenderer {
 
     this.passThruShader = this.createShaderMaterial(
       this.getPassThroughFragmentShader(),
-      this.passThruUniforms
+      this.passThruUniforms,
     );
 
     this.quad = new FullScreenQuad(this.passThruShader);
@@ -118,7 +118,7 @@ export default class GPUComputationRenderer {
     computeFragmentShader: string,
     outputVariable: string,
     inputVariables: Array<string> | null = null,
-    uniforms: { [Key: string]: Uniform<any> } = {}
+    uniforms: { [Key: string]: Uniform<any> } = {},
   ): ShaderType {
     const material = this.createShaderMaterial(computeFragmentShader, uniforms);
     const inputVars =
@@ -159,12 +159,12 @@ export default class GPUComputationRenderer {
       variable.renderTargets[0] = this.createRenderTarget(
         this.textureSize,
         variable.wrap,
-        variable.minMagFilter
+        variable.minMagFilter,
       );
       variable.renderTargets[1] = this.createRenderTarget(
         this.textureSize,
         variable.wrap,
-        variable.minMagFilter
+        variable.minMagFilter,
       );
       this.renderTexture(init_texture, variable.renderTargets[0]);
       this.renderTexture(init_texture, variable.renderTargets[1]);
@@ -173,7 +173,7 @@ export default class GPUComputationRenderer {
     Object.entries(this.shaders).forEach(([shader_name, shader]) => {
       shader.inputVariables.forEach((variable) => {
         console.log(
-          `COMPUTE SHADER ${shader_name}: uniform u${variable.name} added`
+          `COMPUTE SHADER ${shader_name}: uniform u${variable.name} added`,
         );
         shader.material.uniforms[`u${variable.name}`] = new Uniform(null);
       });
@@ -193,7 +193,7 @@ export default class GPUComputationRenderer {
     // Performs the computation for this variable
     this.doRenderTarget(
       this.shaders[shader].material,
-      outputVariable.renderTargets[nextTextureIndex]
+      outputVariable.renderTargets[nextTextureIndex],
     );
     outputVariable.currentTextureIndex = nextTextureIndex;
   }
@@ -221,7 +221,7 @@ export default class GPUComputationRenderer {
   // The following functions can be used to compute things manually
   createShaderMaterial(
     computeFragmentShader: string,
-    uniforms: { [Key: string]: Uniform<any> } = {}
+    uniforms: { [Key: string]: Uniform<any> } = {},
   ) {
     const material = new ShaderMaterial({
       name: "GPUComputationShader",
@@ -250,7 +250,7 @@ export default class GPUComputationRenderer {
     minMagFilters: {
       min: MagnificationTextureFilter | null;
       mag: MagnificationTextureFilter | null;
-    }
+    },
   ): WebGLRenderTarget {
     return new WebGLRenderTarget(textureSize.x, textureSize.y, {
       wrapS: wrap.S || ClampToEdgeWrapping,
@@ -272,7 +272,7 @@ export default class GPUComputationRenderer {
     if (data !== null) {
       if (data.length !== this.textureSize.x * this.textureSize.y * 4) {
         throw new Error(
-          `Invalid data length (${data.length}) for texture size ${this.textureSize.x} x ${this.textureSize.y}.`
+          `Invalid data length (${data.length}) for texture size ${this.textureSize.x} x ${this.textureSize.y}.`,
         );
       }
     }
@@ -282,7 +282,7 @@ export default class GPUComputationRenderer {
       this.textureSize.x,
       this.textureSize.y,
       RGBAFormat,
-      this.dataType
+      this.dataType,
     );
     texture.needsUpdate = true;
     return texture;
