@@ -6,7 +6,7 @@ import { ParticleSimulation } from "../GPGPU/Simulation";
 import type { SimulationOptions } from "../GPGPU/Simulation";
 
 /*
- * Example with GPGPU particle solver
+ * Example with GPGPU particle solver implementing Boids algorithm
  */
 import boidsDisplayVertexShader from "../shaders/gpgpu/boids/display.vert";
 import boidsDisplayFragmentShader from "../shaders/gpgpu/boids/display.frag";

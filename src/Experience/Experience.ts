@@ -9,7 +9,7 @@ import Camera from "./Camera";
 import Renderer from "./Renderer";
 import DisposeScene from "./Utils/Dispose";
 
-import World from "./World/Example3";
+import World from "./World/Example4";
 
 import sources from "./sources";
 
