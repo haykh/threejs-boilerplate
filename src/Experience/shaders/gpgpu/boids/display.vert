@@ -8,7 +8,7 @@ uniform vec2      uTextureSize;
 
 attribute vec2 aUV;
 
-varying vec3 vColor;
+varying vec3 vVelocity;
 
 void main() {
   vec4 particle = texture(uPositions, aUV);
@@ -24,5 +24,5 @@ void main() {
   gl_PointSize = (size / -viewPosition.z);
 
   // Varyings
-  vColor = texture(uVelocities, aUV).xyz / 2.0;
+  vVelocity = texture(uVelocities, aUV).xyz;
 }

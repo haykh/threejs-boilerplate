@@ -16,7 +16,7 @@ import boidsPushComputeShader from "../shaders/gpgpu/boids/push.glsl";
 class Simulation extends ParticleSimulation {
   constructor(
     nparticles: number,
-    opts: SimulationOptions & { sizes: { width: number; height: number } },
+    opts: SimulationOptions & { sizes: { width: number; height: number } }
   ) {
     super(
       nparticles,
@@ -24,52 +24,58 @@ class Simulation extends ParticleSimulation {
         displayVertexShader: boidsDisplayVertexShader,
         displayFragmentShader: boidsDisplayFragmentShader,
       },
-      opts,
+      opts
     );
 
     const parameters = {
       timestep: 1,
-      separationRange: 0.8,
-      separationFactor: 5e-2,
-      visibleRange: 4.0,
-      alignmentFactor: 5e-2,
-      cohesionFactor: 5e-4,
-      speedMinMax: new Vector2(0.3, 1),
+      separationRange: 0.2,
+      visibleRange: 1,
+      separationFactor: 0.1,
+      alignmentFactor: 0.02,
+      cohesionFactor: 0.002,
+      uTurnFactor: 0.1,
+      speedMinMax: new Vector2(0.2, 0.4),
     };
 
     this.debugFolder?.add(parameters, "timestep", 0.01, 5.0).onChange((v) => {
       this.gpgpu.updateComputeUniforms("uTimestep", v);
     });
     this.debugFolder
-      ?.add(parameters, "separationRange", 0.001, 5.0, 0.0001)
+      ?.add(parameters, "separationRange", 0.0, 10.0, 0.0001)
       .onChange((v) => {
         this.gpgpu.updateComputeUniforms("uSeparationRange", v);
       });
     this.debugFolder
-      ?.add(parameters, "separationFactor", 0.0, 10.0, 0.001)
-      .onChange((v) => {
-        this.gpgpu.updateComputeUniforms("uSeparationFactor", v);
-      });
-    this.debugFolder
-      ?.add(parameters, "visibleRange", 0.001, 5.0, 0.0001)
+      ?.add(parameters, "visibleRange", 0.0, 10.0, 0.0001)
       .onChange((v) => {
         this.gpgpu.updateComputeUniforms("uVisibleRange", v);
       });
     this.debugFolder
-      ?.add(parameters, "alignmentFactor", 0.0, 10.0, 0.001)
+      ?.add(parameters, "separationFactor", 0.0, 0.2, 0.0001)
+      .onChange((v) => {
+        this.gpgpu.updateComputeUniforms("uSeparationFactor", v);
+      });
+    this.debugFolder
+      ?.add(parameters, "alignmentFactor", 0.0, 0.1, 0.0001)
       .onChange((v) => {
         this.gpgpu.updateComputeUniforms("uAlignmentFactor", v);
       });
     this.debugFolder
-      ?.add(parameters, "cohesionFactor", 0.0, 10.0, 0.00001)
+      ?.add(parameters, "cohesionFactor", 0.0, 0.1, 0.0001)
       .onChange((v) => {
         this.gpgpu.updateComputeUniforms("uCohesionFactor", v);
       });
     this.debugFolder
-      ?.add(parameters.speedMinMax, "x", 0.0, 10.0, 0.001)
+      ?.add(parameters, "uTurnFactor", 0.0, 0.2, 0.0001)
+      .onChange((v) => {
+        this.gpgpu.updateComputeUniforms("uTurnFactor", v);
+      });
+    this.debugFolder
+      ?.add(parameters.speedMinMax, "x", 0.0, 2.0, 0.001)
       .name("speedMin");
     this.debugFolder
-      ?.add(parameters.speedMinMax, "y", 0.0, 10.0, 0.001)
+      ?.add(parameters.speedMinMax, "y", 0.0, 2.0, 0.001)
       .name("speedMax");
 
     this.gpgpu.addVariable("Positions");
@@ -87,8 +93,9 @@ class Simulation extends ParticleSimulation {
         uVisibleRange: new Uniform(parameters.visibleRange),
         uAlignmentFactor: new Uniform(parameters.alignmentFactor),
         uCohesionFactor: new Uniform(parameters.cohesionFactor),
+        uTurnFactor: new Uniform(parameters.uTurnFactor),
         uSpeedMinMax: new Uniform(parameters.speedMinMax),
-      },
+      }
     );
     this.gpgpu.addComputeShader(
       "position_update",
@@ -97,7 +104,7 @@ class Simulation extends ParticleSimulation {
       ["Positions", "Velocities"],
       {
         uTimestep: new Uniform(parameters.timestep),
-      },
+      }
     );
 
     this.particleRenderer.addDisplayVariable("Positions");
@@ -116,9 +123,9 @@ class Simulation extends ParticleSimulation {
       initPositions.image.data![i * 4 + 2] = 5 * (Math.random() - 0.5);
       initPositions.image.data![i * 4 + 3] = 0;
 
-      initVelocities.image.data![i * 4 + 0] = 2 * (Math.random() - 0.5);
-      initVelocities.image.data![i * 4 + 1] = 2 * (Math.random() - 0.5);
-      initVelocities.image.data![i * 4 + 2] = 2 * (Math.random() - 0.5);
+      initVelocities.image.data![i * 4 + 0] = 1 * (Math.random() - 0.5);
+      initVelocities.image.data![i * 4 + 1] = 1 * (Math.random() - 0.5);
+      initVelocities.image.data![i * 4 + 2] = 1 * (Math.random() - 0.5);
       initVelocities.image.data![i * 4 + 3] = 0;
     }
     this.init({ Positions: initPositions, Velocities: initVelocities });

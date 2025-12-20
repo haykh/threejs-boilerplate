@@ -8,6 +8,7 @@ uniform float uSeparationFactor;
 uniform float uVisibleRange;
 uniform float uAlignmentFactor;
 uniform float uCohesionFactor;
+uniform float uTurnFactor;
 uniform vec2  uSpeedMinMax;
 
 void main() {
@@ -39,13 +40,22 @@ void main() {
       visibleCount   += 1;
     }
   }
-  alignmentAvg /= float(visibleCount);
-  cohesionAvg  /= float(visibleCount);
+  if (visibleCount > 0) {
+    alignmentAvg /= float(visibleCount);
+    cohesionAvg  /= float(visibleCount);
 
-  vel += (separationDelta * uSeparationFactor +
-          (alignmentAvg - vel) * uAlignmentFactor +
-          (cohesionAvg - pos) * uCohesionFactor) *
-         uTimestep;
+    vel += (separationDelta * uSeparationFactor +
+            (alignmentAvg - vel) * uAlignmentFactor +
+            (cohesionAvg - pos) * uCohesionFactor) *
+           uTimestep;
+  }
+
+  vel.x += (float(pos.x < -5.0) * uTurnFactor - float(pos.x > 5.0) * uTurnFactor) *
+           uTimestep;
+  vel.y += (float(pos.y < -5.0) * uTurnFactor - float(pos.y > 5.0) * uTurnFactor) *
+           uTimestep;
+  vel.z += (float(pos.z < -5.0) * uTurnFactor - float(pos.z > 5.0) * uTurnFactor) *
+           uTimestep;
 
   vel = normalize(vel) * clamp(length(vel), uSpeedMinMax.x, uSpeedMinMax.y);
 
