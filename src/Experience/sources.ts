@@ -13,4 +13,4 @@ export type Source = {
 
 export type SourceList = ReadonlyArray<Source>;
 
-export default [];
+export default [] as Array<Source>;
