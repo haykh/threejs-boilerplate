@@ -1,4 +1,9 @@
-const SourceTypes = ["cubeTexture", "gltfModel", "texture"];
+const SourceTypes = [
+  "cubeTexture",
+  "gltfModel",
+  "texture",
+  "hdrTexture",
+] as const;
 
 export type Source = {
   name: string;

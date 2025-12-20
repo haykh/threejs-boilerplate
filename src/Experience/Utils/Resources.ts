@@ -1,17 +1,25 @@
-import { TextureLoader, CubeTextureLoader, Texture, CubeTexture } from "three";
+import {
+  TextureLoader,
+  CubeTextureLoader,
+  DataTexture,
+  Texture,
+  CubeTexture,
+} from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { HDRLoader } from "three/addons/loaders/HDRLoader.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import type { GLTF } from "three/examples/jsm/loaders/GLTFLoader.js";
 import EventEmitter from "./EventEmitter";
 import type { Source, SourceList } from "../sources";
 
 interface Loaders {
-  dracoLoader: DRACOLoader;
-  gltfLoader: GLTFLoader;
   textureLoader: TextureLoader;
   cubeTextureLoader: CubeTextureLoader;
+  hdrLoader: HDRLoader;
+  dracoLoader: DRACOLoader;
+  gltfLoader: GLTFLoader;
 }
-type Asset = CubeTexture | Texture | GLTF;
+type Asset = Texture | CubeTexture | DataTexture | GLTF;
 interface AssetList {
   [Key: string]: Asset;
 }
@@ -31,10 +39,11 @@ export default class Resources extends EventEmitter {
     this.sources = sources;
 
     this.loaders = {
-      dracoLoader: new DRACOLoader(),
-      gltfLoader: new GLTFLoader(),
       textureLoader: new TextureLoader(),
       cubeTextureLoader: new CubeTextureLoader(),
+      hdrLoader: new HDRLoader(),
+      dracoLoader: new DRACOLoader(),
+      gltfLoader: new GLTFLoader(),
     };
 
     this.loaders.dracoLoader.setDecoderPath("/draco/");
@@ -53,7 +62,7 @@ export default class Resources extends EventEmitter {
   startLoading() {
     const onProgress = (name: string) => (progress: ProgressEvent) => {
       console.log(
-        `Loading asset ${name}: ${Math.round((100 * progress.loaded) / progress.total)}%`,
+        `Loading asset ${name}: ${Math.round((100 * progress.loaded) / progress.total)}%`
       );
     };
     const onError = (name: string) => (err: unknown) => {
@@ -63,19 +72,7 @@ export default class Resources extends EventEmitter {
       const type = source.type;
       const name = source.name;
       const paths = source.paths;
-      if (type === "gltfModel") {
-        if (paths.length === 0) {
-          throw new Error(`No path provided for the ${name} source`);
-        }
-        this.loaders.gltfLoader.load(
-          paths[0],
-          (file) => {
-            this.sourceLoaded(source, file);
-          },
-          onProgress(name),
-          onError(name),
-        );
-      } else if (type === "texture") {
+      if (type === "texture") {
         if (paths.length === 0) {
           throw new Error(`No path provided for the ${name} source`);
         }
@@ -85,7 +82,7 @@ export default class Resources extends EventEmitter {
             this.sourceLoaded(source, file);
           },
           onProgress(name),
-          onError(name),
+          onError(name)
         );
       } else if (type === "cubeTexture") {
         this.loaders.cubeTextureLoader.load(
@@ -94,7 +91,31 @@ export default class Resources extends EventEmitter {
             this.sourceLoaded(source, file);
           },
           onProgress(name),
-          onError(name),
+          onError(name)
+        );
+      } else if (type === "hdrTexture") {
+        if (paths.length === 0) {
+          throw new Error(`No path provided for the ${name} source`);
+        }
+        this.loaders.hdrLoader.load(
+          paths[0],
+          (file) => {
+            this.sourceLoaded(source, file);
+          },
+          onProgress(name),
+          onError(name)
+        );
+      } else if (type === "gltfModel") {
+        if (paths.length === 0) {
+          throw new Error(`No path provided for the ${name} source`);
+        }
+        this.loaders.gltfLoader.load(
+          paths[0],
+          (file) => {
+            this.sourceLoaded(source, file);
+          },
+          onProgress(name),
+          onError(name)
         );
       }
     });
@@ -117,6 +138,8 @@ export default class Resources extends EventEmitter {
       if (item instanceof Texture) {
         item.dispose();
       } else if (item instanceof CubeTexture) {
+        item.dispose();
+      } else if (item instanceof DataTexture) {
         item.dispose();
       } else if ((item as GLTF).scene) {
         (item as GLTF).scene.traverse((child) => {
