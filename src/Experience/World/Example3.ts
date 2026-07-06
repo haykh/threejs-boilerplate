@@ -131,7 +131,7 @@ class Simulation extends ParticleSimulation {
     this.init({ Positions: initPositions, Velocities: initVelocities });
   }
 
-  update(camera: Camera, time: { elapsedSec: number }) {
+  update(_: Camera, time: { elapsedSec: number }) {
     this.gpgpu.compute("velocity_update");
     this.gpgpu.compute("position_update");
     this.particleRenderer.render(time);
@@ -142,7 +142,7 @@ class Simulation extends ParticleSimulation {
   }
 }
 
-export default class Example2 extends World {
+export default class Example extends World {
   public simulation: Simulation;
 
   constructor(opts: WorldOptions) {

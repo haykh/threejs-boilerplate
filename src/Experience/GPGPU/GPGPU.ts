@@ -3,29 +3,27 @@ import {
   type Texture,
   type Material,
   type MagnificationTextureFilter,
+  type Wrapping,
+  type HalfFloatType,
   Uniform,
   DataTexture,
   FloatType,
   NearestFilter,
   ShaderMaterial,
   WebGLRenderTarget,
-  RepeatWrapping,
   ClampToEdgeWrapping,
-  MirroredRepeatWrapping,
-  HalfFloatType,
   RGBAFormat,
 } from "three";
 import { FullScreenQuad } from "three/addons/postprocessing/Pass.js";
 
-const WrapTypes = [RepeatWrapping, ClampToEdgeWrapping, MirroredRepeatWrapping];
-const FloatTypes = [FloatType, HalfFloatType];
+type FloatTextureType = typeof FloatType | typeof HalfFloatType;
 
 export type VariableType = {
   name: string;
   renderTargets: Array<WebGLRenderTarget>;
   wrap: {
-    S: (typeof WrapTypes)[number] | null;
-    T: (typeof WrapTypes)[number] | null;
+    S: Wrapping | null;
+    T: Wrapping | null;
   };
   minMagFilter: {
     min: MagnificationTextureFilter;
@@ -43,7 +41,7 @@ export default class GPUComputationRenderer {
   protected readonly renderer: WebGLRenderer;
   public readonly textureSize: { x: number; y: number };
 
-  protected dataType: (typeof FloatTypes)[number] = FloatType;
+  protected dataType: FloatTextureType = FloatType;
 
   protected readonly quad: FullScreenQuad;
   protected readonly passThruUniforms: { [Key: string]: Uniform<any> } = {
@@ -78,7 +76,7 @@ export default class GPUComputationRenderer {
    * @param type - The type to set.
    * @return A reference to this renderer.
    */
-  setDataType(type: (typeof FloatTypes)[number]): GPUComputationRenderer {
+  setDataType(type: FloatTextureType): GPUComputationRenderer {
     this.dataType = type;
     return this;
   }
@@ -244,8 +242,8 @@ export default class GPUComputationRenderer {
   createRenderTarget(
     textureSize: { x: number; y: number },
     wrap: {
-      S: (typeof WrapTypes)[number] | null;
-      T: (typeof WrapTypes)[number] | null;
+      S: Wrapping | null;
+      T: Wrapping | null;
     },
     minMagFilters: {
       min: MagnificationTextureFilter | null;
@@ -276,9 +274,10 @@ export default class GPUComputationRenderer {
         );
       }
     }
+    const textureData =
+      data || new Float32Array(this.textureSize.x * this.textureSize.y * 4);
     const texture = new DataTexture(
-      (data =
-        data || new Float32Array(this.textureSize.x * this.textureSize.y * 4)),
+      textureData,
       this.textureSize.x,
       this.textureSize.y,
       RGBAFormat,

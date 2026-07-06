@@ -9,7 +9,7 @@ import CustomShaderMaterial from "../Utils/CustomShaderMaterial";
 import vertexShader from "../shaders/shader.vert";
 import fragmentShader from "../shaders/shader.frag";
 
-export default class Example1 extends World {
+export default class Example extends World {
   public shader_material: CustomShaderMaterial | null = null;
 
   constructor(opts: WorldOptions) {

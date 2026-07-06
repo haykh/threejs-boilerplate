@@ -125,7 +125,7 @@ class Simulation extends GridSimulation {
   }
 }
 
-export default class Example2 extends World {
+export default class Example extends World {
   public simulation: Simulation;
 
   constructor(opts: WorldOptions) {
