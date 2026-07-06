@@ -20,18 +20,13 @@ export interface WorldOptions {
 }
 
 export class World {
-  protected time: { elapsedSec: number };
-  protected sizes: {
-    width: number;
-    height: number;
-    pixelRatio: number;
-    pixelResolution: { x: number; y: number };
-  };
+  protected time: WorldOptions["time"];
+  protected sizes: WorldOptions["sizes"];
   protected scene: Scene;
   protected renderer: WebGLRenderer;
   protected camera: Camera;
   protected resources: Resources;
-  protected debug: { active: boolean; getUI: () => GUI };
+  protected debug: WorldOptions["debug"];
 
   public debugFolder: GUI | null = null;
 
