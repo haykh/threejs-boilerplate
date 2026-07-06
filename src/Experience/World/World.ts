@@ -5,7 +5,7 @@ import { type OrbitControls } from "three/addons/controls/OrbitControls.js";
 import type Resources from "../Utils/Resources";
 
 export interface WorldOptions {
-  time: { elapsedSec: number };
+  time: { elapsedSec: number; deltaSec: number };
   scene: Scene;
   renderer: { instance: WebGLRenderer };
   camera: { instance: Camera; controls: OrbitControls };
