@@ -1,5 +1,6 @@
 import type { Scene, WebGLRenderer, Camera } from "three";
 import { type GUI } from "three/addons/libs/lil-gui.module.min.js";
+import { type OrbitControls } from "three/addons/controls/OrbitControls.js";
 
 import type Resources from "../Utils/Resources";
 
@@ -7,7 +8,7 @@ export interface WorldOptions {
   time: { elapsedSec: number };
   scene: Scene;
   renderer: { instance: WebGLRenderer };
-  camera: { instance: Camera };
+  camera: { instance: Camera; controls: OrbitControls };
   sizes: {
     width: number;
     height: number;

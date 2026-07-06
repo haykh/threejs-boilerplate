@@ -20,7 +20,6 @@ export default class Camera {
 
   public instance: PerspectiveCamera;
   public controls: OrbitControls;
-  public controlsActive: boolean = true;
 
   constructor(opts: CameraOptions) {
     this.sizes = opts.sizes;
